@@ -2,7 +2,9 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { UserModel } from "../models/Users.js";
+import dotenv from 'dotenv';
 
+dotenv.config();
 const router = express.Router();
 
 
@@ -35,34 +37,42 @@ router.post("/register",async (req, res) => {
 // then i want to send that back to the front end and whenever a user in the front end makes a request  they need to prove that
 //they are the original usrs  that were logged in so the should send that token to the req and every time you make a 
 //a req i should validate to see if they are the authenticated user
+router.post("/login", async (req, res) => {
+  const { username, password } = req.body;
 
-router.post("/login", async (req,res) => {
-    const {username, password } =req.body;
+  try {
+    // Find the user based on the provided username
+    const user = await UserModel.findOne({ username });
 
-    const user = await UserModel.findOne({username});
+    // Check if the user exists
+    if (!user) {
+      // If the user doesn't exist, return an error response
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
-    //if the user is no found then i can't log in
-if(!user){
-    return res
-      .status(400)
-      .json({ message: "Username or password is incorrect" });
-}
-// I need to see if the password that i have match the password that is on the database
-//i cant unhush a password that is already hashed so when i send a password hashed to the database i can't never know what the password originally was
-// so to know if the password that i'm inputting is the correct password is we can hash the password that was inputted and compare it with the password in the database
-const isPasswordValid = await bcrypt.compare(password, user.password);
-if(!isPasswordValid){
-    return res.status(400).json({message: "Username or Password is incorrect"});
+    // Compare the provided password with the hashed password stored in the database
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-}
-// our token will be a string of number and letter the will be converted to the _id data and the secret 
-//is important because it should be used whenever you want to verify if the user is really authenticated 
-// it's inportant to put the secret in an enviroment variable and using it 
-const token = jwt.sign({id: user._id}, "secret");
-//  send back the token and the user id
-res.json({token,userID: user._id});
+    // Check if the password is valid
+    if (!isPasswordValid) {
+      // If the password is invalid, return an error response
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
+    // Generate a JSON Web Token (JWT) containing the user ID
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+
+    // Return the token and the user ID in the response
+    res.json({ token, userID: user._id });
+  } catch (error) {
+    // If an error occurs during the login process, handle the error
+    console.error("Login error:", error);
+    res.status(500).json({ message: "An error occurred during login" });
+  }
 });
+
+
+
 export { router as userRouter };
 
 export const verifyToken = (req, res, next) => {
