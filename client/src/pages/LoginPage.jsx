@@ -18,23 +18,30 @@ export default function LoginPage() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+      
         try {
-            const result = await axios.post("http://localhost:3001/login/login", {
-                username,
-                password,
-            });
-            //we want to set the access token cookie to have a value of response.data.token, the cookie will have the value that come in the token's response
-            setCookies("access_token", result.data.token);
-
-            console.log(result);
-            // we want to store our user ID that were're sending back inside of our local storage for quick access to it 
-            window.localStorage.setItem("userID", result.data.userID);
-            navigate("/");
+          const result = await axios.post("http://localhost:3001/login/login", {
+            username,
+            password,
+          });
+      
+          setCookies("access_token", result.data.token);
+          window.localStorage.setItem("userID", result.data.userID);
+          navigate("/");
         } catch (error) {
-            console.error(error);
+          console.error("Login error:", error);
+      
+          if (error.response) {
+            const { message } = error.response.data;
+      
+            // Display an alert message to the user indicating the error message
+            alert(message);
+          } else {
+            // Display a generic error message
+            alert("An error occurred during login");
+          }
         }
-    };
+      };
 
     return (
         <div className="mt-4 grow flex items-center justify-around">
