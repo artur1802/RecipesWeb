@@ -20,7 +20,7 @@ export default function LoginPage() {
         event.preventDefault();
       
         try {
-          const result = await axios.post("http://localhost:3001/login/login", {
+          const result = await axios.post("https://recipeapps.onrender.com/login/login", {
             username,
             password,
           });

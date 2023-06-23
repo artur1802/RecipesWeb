@@ -14,7 +14,7 @@ export const Home = () => {
     // Initial loading effect
     const fetchRecipes = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/recipes"); // Get recipes from the API
+        const response = await axios.get("https://recipeapps.onrender.com/recipes"); // Get recipes from the API
         const modifiedRecipes = response.data.map((recipe) => ({
           ...recipe,
           isSaved: isRecipeSaved(recipe._id), // Check if the recipe is saved
@@ -28,7 +28,7 @@ export const Home = () => {
     const fetchSavedRecipes = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/recipes/savedRecipes/ids/${userID}`
+          `https://recipeapps.onrender.com/recipes/savedRecipes/ids/${userID}`
         ); // Get saved recipes of the user
         setSavedRecipes(response.data.savedRecipes); // Update state with saved recipes
       } catch (err) {
@@ -44,7 +44,7 @@ export const Home = () => {
     // Save a recipe
     try {
       const response = await axios.put(
-        "http://localhost:3001/recipes",
+        "https://recipeapps.onrender.com/recipes",
         {
           recipeID,
           userID,
@@ -60,10 +60,10 @@ export const Home = () => {
   const deleteRecipe = async (recipeID) => {
     // Delete a recipe
     try {
-      await axios.delete(`http://localhost:3001/recipes/${recipeID}`, {
+      await axios.delete(`https://recipeapps.onrender.com/recipes/${recipeID}`, {
         headers: { authorization: cookies.access_token },
       });
-      const response = await axios.get('http://localhost:3001/recipes');
+      const response = await axios.get('https://recipeapps.onrender.com/recipes');
       const updatedRecipes = response.data.map((recipe) => ({
         ...recipe,
         isSaved: isRecipeSaved(recipe._id),

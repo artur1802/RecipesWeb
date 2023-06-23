@@ -21,7 +21,7 @@ export const RegisterPage = () => {
     event.preventDefault();
     try {
       // in this post request I put the url, and the objec that it's gonna be the object for the body of the request with the username and password 
-      await axios.post("http://localhost:3001/register/register", {
+      await axios.post("https://recipeapps.onrender.com/register/register", {
         username,
         password,
       });
