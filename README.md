@@ -15,15 +15,6 @@ This full-stack web application combines a user-friendly interface with the powe
 - **Database**: MongoDB
 - **Authentication**: JSON Web Tokens (JWT)
 
-## **Screenshots**
-### **Home Page**
-![Home Page](screenshots/home_page.png)
-
-### **Recipe List**
-![Recipe List](screenshots/recipe_list.png)
-
-### **Add Recipe**
-![Add Recipe](screenshots/add_recipe.png)
 
 ## **What I Learned**
 - **MERN Stack**: Gained hands-on experience in developing a full-stack application using MongoDB, Express, React, and Node.js.
